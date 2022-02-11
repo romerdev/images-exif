@@ -9,6 +9,8 @@
   "author": "Romer Bormann",
   "license": "MIT",
   "dependencies": {
-    "exif": "^0.6.0"
+    "add-filename-increment": "^1.0.0",
+    "exif": "^0.6.0",
+    "mv": "^2.1.1"
   }
 }

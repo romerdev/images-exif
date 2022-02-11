@@ -1,6 +1,6 @@
-# Image EFIX date reader
+# Image EXIF date reader
 
-If a EFIX CreateDate field of the image is found, it's renames the file to that date.
+Tool for renaming images to the date of when the picuture was taken.
 
 ## Usage
 

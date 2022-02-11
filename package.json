@@ -1,0 +1,14 @@
+{
+  "name": "images-efix",
+  "version": "1.0.0",
+  "description": "App for reading and altering image EFIX info",
+  "main": "server.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Romer Bormann",
+  "license": "MIT",
+  "dependencies": {
+    "exif": "^0.6.0"
+  }
+}

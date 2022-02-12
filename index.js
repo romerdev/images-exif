@@ -26,7 +26,7 @@ function exportImage(currentPath, extention) {
           const h = date.substring(12, 14);
           const min = date.substring(15, 17);
 
-          const formattedDate = `${y}-${m}-${d}_${h}:${min}`;
+          const formattedDate = `${y}-${m}-${d}_${h}-${min}`;
 
           let destinationPath = path.join(
             __dirname,
@@ -45,7 +45,7 @@ function exportImage(currentPath, extention) {
             );
           }
 
-          // Moving file file
+          // Moving the file
           mv(currentPath, destinationPath, function (err) {
             if (err) {
               throw err;
@@ -67,10 +67,8 @@ function exportImage(currentPath, extention) {
 function checkExistance(file) {
   try {
     if (fs.existsSync(file)) {
-      console.log("File exists");
       return true;
     } else {
-      console.log("File does not exist");
       return;
     }
   } catch (err) {

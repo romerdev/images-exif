@@ -4,7 +4,7 @@ Tool for renaming images to the date of when the picuture was taken.
 
 ## Usage
 
-Put your images in the input-folder, then run:
+Create a folder called 'input' inside the root folder. Put your images inside that folder and run:
 
     npm run start
 

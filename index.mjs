@@ -1,11 +1,14 @@
 import fs from "fs/promises";
+import os from "os";
 import path from "path";
 import mv from "mv";
+import { exec } from "child_process";
 import { v4 as uuidv4 } from "uuid";
 import chalk from "chalk";
 import ExifImage from "exif";
 import ffmpeg from "fluent-ffmpeg";
 import { fileTypeFromFile } from "file-type";
+import { utcToZonedTime, format } from "date-fns-tz";
 
 const directory = process.cwd();
 
@@ -152,6 +155,43 @@ const moveFile = async (currentPath, date, extension) => {
   await mvAsync(currentPath, destinationPath);
   if (await fileExists(destinationPath)) {
     console.log(chalk.green("Successfully moved the file!"));
+
+    // Check if the operating system is MacOS
+    if (os.platform() === "darwin") {
+      const formattedDateForTouch = date.toLocaleString("en-US", {
+        timeZone: "Europe/Amsterdam",
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      });
+
+      // Update birthtime (creation date) for MacOS
+      exec(
+        `SetFile -d "${formattedDateForTouch}" "${destinationPath}"`,
+        (error, stdout, stderr) => {
+          if (error) {
+            console.error(
+              `Failed to update creation date of ${destinationPath}: ${error}`
+            );
+            return;
+          }
+          if (stderr) {
+            console.error(
+              `Failed to update creation date of ${destinationPath}: ${stderr}`
+            );
+            return;
+          }
+          console.log(`Updated creation date of ${destinationPath}`);
+        }
+      );
+    } else {
+      // For other OS, we use fs.utimes method to modify the birthtime
+      await fs.utimes(destinationPath, date, date);
+    }
   } else {
     console.log(
       chalk.red(
@@ -162,19 +202,13 @@ const moveFile = async (currentPath, date, extension) => {
 };
 
 const formatMediaDate = (date, mediaType) => {
+  const zone = "Europe/Amsterdam";
+  const zonedDate = utcToZonedTime(date, zone);
+
   if (mediaType === "image") {
-    return `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}_${date
-      .getHours()
-      .toString()
-      .padStart(2, "0")}-${date.getMinutes().toString().padStart(2, "0")}`;
+    return format(zonedDate, "yyyy-MM-dd_HH-mm-ss");
   } else if (mediaType === "video") {
-    return (
-      date.toISOString().split("T")[0].replace(/:/g, "-") +
-      "_" +
-      date.toISOString().split("T")[1].split(".")[0].replace(/:/g, "-")
-    );
+    return format(zonedDate, "yyyy-MM-dd_HH-mm-ss");
   }
 };
 

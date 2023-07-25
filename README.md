@@ -1,11 +1,11 @@
-# Image EXIF date reader
+# Media EXIF date reader
 
-Tool for renaming JPEG images to the date of when the picuture was taken.
+Tool for renaming JPEG images and/or video's to the date of when the item was created.
 
 ## Usage
 
-Put your JPEG images inside the `/input` folder and run:
+Put your JPEG images and/or video's inside the `/input` folder and run:
 
     npm run start
 
-Images that could be renamed are now in the output folder.
+Media that could be renamed are now in the output folder.
